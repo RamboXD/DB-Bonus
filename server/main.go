@@ -16,6 +16,9 @@ var (
 	AuthController      controllers.AuthController
 	AuthRouteController routes.AuthRouteController
 
+	MemberController      controllers.MemberController
+	MemberRouteController routes.MemberRouteController
+
 )
 
 func init() {
@@ -29,6 +32,8 @@ func init() {
 	AuthController = controllers.NewAuthController(initializers.DB)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 
+	MemberController = controllers.NewMemberController(initializers.DB)
+	MemberRouteController = routes.NewMemberRouteController(MemberController)
 	
 	server = gin.Default()
 }
@@ -52,6 +57,7 @@ func main() {
 	})
 
 	AuthRouteController.AuthRoute(router)
+	MemberRouteController.MemberRoute(router)
 	log.Fatal(server.Run(":" + config.ServerPort))
 }
 

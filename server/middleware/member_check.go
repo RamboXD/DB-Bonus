@@ -10,7 +10,7 @@ import (
 	"github.com/RamboXD/DB-Bonus/utils"
 	"github.com/gin-gonic/gin"
 )
-func DeserializeAdmin() gin.HandlerFunc {
+func MemberCheck() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var access_token string
 		cookie, err := ctx.Cookie("access_token")
@@ -37,15 +37,21 @@ func DeserializeAdmin() gin.HandlerFunc {
 		}
 
 		var user models.User
-		result := initializers.DB.First(&user, "id = ?", fmt.Sprint(sub))
+		result := initializers.DB.First(&user, "user_id = ?", fmt.Sprint(sub))
 		if result.Error != nil {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "the user belonging to this token no logger exists"})
 			return
 		}
 
-
+		var member models.Member
+		resultMember := initializers.DB.First(&member, "member_user_id = ?", fmt.Sprint(sub))
+		if resultMember.Error != nil {
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "Member emessingoi bratishka"})
+			return
+		}
 
 		ctx.Set("currentUser", user)
+		ctx.Set("currentMember", member)
 		ctx.Next()
 	}
 }
