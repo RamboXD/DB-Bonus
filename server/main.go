@@ -19,6 +19,8 @@ var (
 	MemberController      controllers.MemberController
 	MemberRouteController routes.MemberRouteController
 
+	CaregiverController      controllers.CaregiverController
+	CaregiverRouteController routes.CaregiverRouteController
 )
 
 func init() {
@@ -35,6 +37,8 @@ func init() {
 	MemberController = controllers.NewMemberController(initializers.DB)
 	MemberRouteController = routes.NewMemberRouteController(MemberController)
 	
+	CaregiverController = controllers.NewCaregiverController(initializers.DB)
+	CaregiverRouteController = routes.NewCaregiverRouteController(CaregiverController)
 	server = gin.Default()
 }
 
@@ -58,6 +62,7 @@ func main() {
 
 	AuthRouteController.AuthRoute(router)
 	MemberRouteController.MemberRoute(router)
+	CaregiverRouteController.CaregiverRoute(router)
 	log.Fatal(server.Run(":" + config.ServerPort))
 }
 

@@ -71,3 +71,42 @@ func NewUserResponse(user models.User, caregiver *models.Caregiver, member *mode
 
     return userResp
 }
+
+type CaregiverDTO struct {
+    CaregiverUserID  uuid.UUID `json:"caregiverUserId"`
+    Photo            []byte    `json:"photo"`
+    Gender           string    `json:"gender"`
+    CaregivingType   string    `json:"caregivingType"`
+    HourlyRate       float64   `json:"hourlyRate"`
+    Email            string    `json:"email"`
+    GivenName        string    `json:"givenName"`
+    Surname          string    `json:"surname"`
+    City             string    `json:"city"`
+    PhoneNumber      string    `json:"phoneNumber"`
+    ProfileDescription string  `json:"profileDescription"`
+}
+
+type CaregiverInfo struct {
+    CaregiverUserID   uuid.UUID `json:"caregiverUserId"`
+    Photo             []byte    `json:"photo"`
+    Gender            string    `json:"gender"`
+    CaregivingType    string    `json:"caregivingType"`
+    HourlyRate        float64   `json:"hourlyRate"`
+    Email             string    `json:"email"`
+    GivenName         string    `json:"givenName"`
+    Surname           string    `json:"surname"`
+    City              string    `json:"city"`
+    PhoneNumber       string    `json:"phoneNumber"`
+    ProfileDescription string   `json:"profileDescription"`
+}
+
+    // Struct to hold the combined appointment and caregiver information
+    type AppointmentWithCaregiver struct {
+        models.Appointment
+        Caregiver CaregiverInfo `json:"caregiver"`
+    }
+
+type AppointmentInfo struct {
+    models.Appointment
+    Caregiver CaregiverInfo `json:"caregiver"`
+}
