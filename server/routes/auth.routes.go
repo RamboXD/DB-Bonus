@@ -17,7 +17,6 @@ func (rc *AuthRouteController) AuthRoute(rg *gin.RouterGroup) {
     authRouter := rg.Group("/auth")
 
     authRouter.POST("/login", rc.authController.SignInUser)
-    // authRouter.GET("/logout", middleware.DeserializeUser(), rc.authController.LogoutUser)
 
     registerRouter := authRouter.Group("/register")
     registerRouter.POST("/caregiver", rc.authController.SignUpCaregiver) 

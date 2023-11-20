@@ -20,6 +20,7 @@ type SignInInput struct {
 type MemberSignUpInput struct {
     User   *models.User   `json:"user"`
     Member *models.Member `json:"member"`
+    Address *models.Address `json:"address"`
 }
 
 type CaregiverSignUpInput struct {

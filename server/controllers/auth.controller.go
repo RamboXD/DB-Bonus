@@ -82,7 +82,7 @@ func (ac *AuthController) SignUpMember(ctx *gin.Context) {
         return
     }
 
-    if payload.User == nil || payload.Member == nil {
+    if payload.User == nil || payload.Member == nil || payload.Address == nil {
         ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "User and Driver information are required"})
         return
     }
@@ -108,6 +108,15 @@ func (ac *AuthController) SignUpMember(ctx *gin.Context) {
 
     memberResult := ac.DB.Create(&newMember)
     if memberResult.Error != nil {
+        ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": "Failed to create caregiver profile"})
+        return
+    }
+
+    newAddress := payload.Address
+    newAddress.MemberUserID = newMember.MemberUserID 
+
+    addressResult := ac.DB.Create(&newAddress)
+    if addressResult.Error != nil {
         ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": "Failed to create caregiver profile"})
         return
     }
