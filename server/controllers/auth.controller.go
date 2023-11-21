@@ -133,34 +133,47 @@ Defaul Login HUMANITY
 */
 
 func (ac *AuthController) SignInUser(ctx *gin.Context) {
-	var payload *request.SignInInput
-	
-	if err := ctx.ShouldBindJSON(&payload); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
-		return
-	}
-	
-	var user models.User
-	result := ac.DB.First(&user, "email = ?", strings.ToLower(payload.Email))
-	if result.Error != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
-		return
-	}
-	
-	if err := utils.VerifyPassword(user.Password, payload.Password); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
-		return
-	}
-	
-	config, _ := initializers.LoadConfig(".")
-	
-	access_token, err := utils.CreateToken(config.AccessTokenExpiresIn, user.UserID, config.AccessTokenPrivateKey)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
-		return
-	}
-	
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token})
+    var payload *request.SignInInput
+    
+    if err := ctx.ShouldBindJSON(&payload); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+        return
+    }
+    
+    var user models.User
+    result := ac.DB.First(&user, "email = ?", strings.ToLower(payload.Email))
+    if result.Error != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
+        return
+    }
+    
+    if err := utils.VerifyPassword(user.Password, payload.Password); err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
+        return
+    }
+
+    // Determine the user's role
+    var role string
+    var member models.Member
+    var caregiver models.Caregiver
+
+    if err := ac.DB.First(&member, "member_user_id = ?", user.UserID).Error; err == nil {
+        role = "member"
+    } else if err := ac.DB.First(&caregiver, "caregiver_user_id = ?", user.UserID).Error; err == nil {
+        role = "caregiver"
+    } else {
+        role = "unknown"
+    }
+
+    config, _ := initializers.LoadConfig(".")
+    
+    access_token, err := utils.CreateToken(config.AccessTokenExpiresIn, user.UserID, config.AccessTokenPrivateKey)
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+        return
+    }
+    
+    ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token, "role": role})
 }
 
 
