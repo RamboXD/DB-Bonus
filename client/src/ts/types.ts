@@ -41,6 +41,17 @@ type SignedXML = {
   org: string;
   surname: string;
 };
+export interface Appointment {
+  AppointmentID: string;
+  CaregiverUserID: string;
+  MemberUserID: string;
+  AppointmentDate: string;
+  AppointmentTime: string;
+  WorkHours: number;
+  Status: string;
+  Caregiver: Caregiver;
+  Member: Member;
+}
 
 export type signResponse = {
   citizenships: Citizenship[];
@@ -90,9 +101,38 @@ interface Caregiver {
   hourlyRate: number;
 }
 
+interface Member {
+  houseRules: string;
+}
+
+interface Address {
+  houseNumber: string;
+  street: string;
+  town: string;
+}
+
 export interface caregiverData {
   user: User;
   caregiver: Caregiver;
+}
+
+export interface GetCaregiverData {
+  CaregiverUserID: string;
+  Photo: string; // Base64 encoded image string
+  Gender: string;
+  CaregivingType: string;
+  HourlyRate: number;
+  User: User;
+}
+export interface loginType {
+  email: string;
+  password: string;
+}
+
+export interface memberData {
+  user: User;
+  member: Member;
+  address: Address;
 }
 
 export type caregiverRegistartionForm = {
@@ -110,11 +150,26 @@ export type caregiverRegistartionForm = {
   hourlyRate: number;
 };
 
-export type organizationsTable = {
-  id: string;
-  name: string;
-  BIN: string;
-  head: string;
+export type memberRegistartionForm = {
+  step: number;
+  email: string;
+  password: string;
+  givenName: string;
+  surname: string;
+  city: string;
+  phoneNumber: string;
+  profileDescription: string;
+  houseRules: string;
+  houseNumber: string;
+  street: string;
+  town: string;
+};
+
+export type jobsTable = {
+  JobID: string;
+  RequiredCaregivingType: string;
+  OtherRequirements: string;
+  DatePosted: string;
 };
 
 export type dealsTable = {

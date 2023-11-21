@@ -1,6 +1,6 @@
 import $api from "@/http";
 import { AuthResponse, RegisterResponse } from "@/models/response/AuthResponse";
-import { organizationData } from "@/ts/types";
+import { caregiverData, memberData } from "@/ts/types";
 import { AxiosResponse } from "axios";
 
 export default class AuthService {
@@ -14,10 +14,31 @@ export default class AuthService {
     });
   }
 
-  static async register(
-    organizatioData: organizationData
-  ): Promise<AxiosResponse<RegisterResponse>> {
-    return $api.post("/registration/organization", organizatioData);
+  static async registerCaregiver(
+    caregiverData: caregiverData
+  ): Promise<string> {
+    // Ensure hourlyRate is a string and parse it to a float
+    if (typeof caregiverData.caregiver.hourlyRate === "string") {
+      const hourlyRateFloat = parseFloat(caregiverData.caregiver.hourlyRate);
+      if (!isNaN(hourlyRateFloat)) {
+        // If conversion is successful, assign the float value back
+        caregiverData.caregiver.hourlyRate = hourlyRateFloat;
+      } else {
+        throw new Error("Invalid hourly rate value");
+      }
+    }
+
+    console.log(caregiverData);
+    const response = await $api.post("/auth/register/caregiver", caregiverData);
+    console.log(response);
+    return "success";
+  }
+
+  static async registerMember(memberData: memberData): Promise<string> {
+    console.log(memberData);
+    const response = await $api.post("/auth/register/member", memberData);
+    console.log(response);
+    return "success";
   }
 
   static async logout(): Promise<void> {

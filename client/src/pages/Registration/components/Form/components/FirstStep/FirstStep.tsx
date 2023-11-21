@@ -18,10 +18,9 @@ import { useFormContext } from "react-hook-form";
 
 const FirstStep: React.FC = () => {
   const form = useFormContext();
-
   return (
     <div className="flex flex-col">
-      <CardDescription>User Date</CardDescription>
+      <CardDescription>Caregiver Date</CardDescription>
       <div className="flex flex-row gap-4">
         <div className="w-full flex flex-col gap-1">
           <FormField
@@ -31,7 +30,7 @@ const FirstStep: React.FC = () => {
               <FormItem className="space-y-0">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ваше имя" />
+                  <Input placeholder="Your name" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -43,7 +42,7 @@ const FirstStep: React.FC = () => {
               <FormItem className="space-y-0">
                 <FormLabel>Profile Description</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter profile description" />
+                  <Input placeholder="Enter profile description" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -55,7 +54,7 @@ const FirstStep: React.FC = () => {
               <FormItem className="space-y-0">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter email" />
+                  <Input placeholder="Enter email" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -78,6 +77,26 @@ const FirstStep: React.FC = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="caregivingType"
+            render={({ field }) => (
+              <FormItem className="space-y-0">
+                <FormLabel>Caregiving Type</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select caregiving Type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Baby sitter">Baby sitter</SelectItem>
+                    <SelectItem value="Elder care">Elder care</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
         </div>
         <div className="w-full flex flex-col gap-1">
           <FormField
@@ -87,14 +106,14 @@ const FirstStep: React.FC = () => {
               <FormItem className="space-y-0">
                 <FormLabel>Surname</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your surname" />
+                  <Input placeholder="Your surname" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="City"
+            name="city"
             render={({ field }) => (
               <FormItem className="space-y-0">
                 <FormLabel>City</FormLabel>
@@ -109,6 +128,59 @@ const FirstStep: React.FC = () => {
                     <SelectItem value="Almaty">Almaty</SelectItem>
                   </SelectContent>
                 </Select>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <FormItem className="space-y-0">
+                <FormLabel>Gender</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Male">Male</SelectItem>
+                    <SelectItem value="Female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="space-y-0">
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="hourlyRate"
+            render={({ field }) => (
+              <FormItem className="space-y-0">
+                <FormLabel>Hourly Rate</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter hourly rate"
+                    step="0.01"
+                    {...field}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

@@ -11,10 +11,10 @@ const Header: React.FC = () => {
           variant="outline"
           onClick={() => {
             localStorage.clear();
-            navigate("/login/worker");
+            navigate("/login");
           }}
         >
-          Выход
+          Logout
         </Button>
       </div>
     </div>

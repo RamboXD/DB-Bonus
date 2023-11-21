@@ -1,6 +1,11 @@
 import { convertDateFormat } from "@/lib/utils";
 import AuthService from "@/services/Auth/AuthService";
-import { caregiverData, caregiverRegistartionForm } from "@/ts/types";
+import {
+  caregiverData,
+  caregiverRegistartionForm,
+  memberData,
+  memberRegistartionForm,
+} from "@/ts/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserData {
@@ -17,7 +22,7 @@ export const login = createAsyncThunk(
   }
 );
 
-export const register = createAsyncThunk(
+export const registerCaregiver = createAsyncThunk(
   "register",
   async function (formData: caregiverRegistartionForm) {
     const caregiverData: caregiverData = {
@@ -37,8 +42,38 @@ export const register = createAsyncThunk(
         hourlyRate: formData.hourlyRate,
       },
     };
-    const response = await AuthService.register(caregiverData);
-    return response;
+    const response = await AuthService.registerCaregiver(caregiverData);
+    console.log(response);
+
+    // return response;
+  }
+);
+
+export const registerMember = createAsyncThunk(
+  "register",
+  async function (formData: memberRegistartionForm) {
+    const memberData: memberData = {
+      user: {
+        email: formData.email,
+        password: formData.password,
+        givenName: formData.givenName,
+        surname: formData.surname,
+        city: formData.city,
+        phoneNumber: formData.phoneNumber,
+        profileDescription: formData.profileDescription,
+      },
+      member: {
+        houseRules: formData.houseRules,
+      },
+      address: {
+        houseNumber: formData.houseNumber,
+        street: formData.street,
+        town: formData.town,
+      },
+    };
+    console.log(memberData);
+    const response = await AuthService.registerMember(memberData);
+    // return response;
   }
 );
 
@@ -48,10 +83,12 @@ export const logout = createAsyncThunk("auth/logout", async function () {
 
 interface userState {
   isAuth: boolean;
+  role: string;
 }
 
 const initialState: userState = {
   isAuth: false,
+  role: "null",
 };
 
 export const authSlice = createSlice({
@@ -72,15 +109,9 @@ export const authSlice = createSlice({
       .addCase(login.rejected, (state, { payload }) => {
         console.log("login failed: Info -> ", state, payload);
       })
-      // Register
-      .addCase(register.fulfilled, (state, { payload }) => {
-        localStorage.setItem("token", payload.data.token);
-        state.isAuth = true;
-      })
-      .addCase(register.rejected, (state, { payload }) => {
+      .addCase(registerCaregiver.rejected, (state, { payload }) => {
         console.log("registration failed: Info -> ", state, payload);
       })
-      // Logout
       .addCase(logout.fulfilled, (state) => {
         localStorage.clear();
         state.isAuth = false;

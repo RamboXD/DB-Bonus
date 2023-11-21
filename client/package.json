@@ -1,5 +1,5 @@
 {
-  "name": "DS-clients",
+  "name": "dbonus",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -51,6 +51,7 @@
     "sort-by": "^1.2.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1",
     "vite-tsconfig-paths": "^4.2.1",
     "zod": "^3.22.4"
   },

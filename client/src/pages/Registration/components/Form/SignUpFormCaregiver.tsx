@@ -9,49 +9,44 @@ import {
 import { Form, FormStep } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch } from "@/hooks/redux";
-import { register } from "@/store/reducers/authReducer";
+import { registerCaregiver } from "@/store/reducers/authReducer";
 import { caregiverRegistartionForm } from "@/ts/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 import FirstStep from "./components/FirstStep/FirstStep";
-import SecondStep from "./components/SecondStep/SecondStep";
-import { caregiverRegistrationSchema } from "@/zod/zod";
+import { caregiverSchema } from "@/zod/zod";
 
-const SignUpFormCaregiver: React.FC = () => {
+interface SignProps {
+  setIsCaregiver: (value: number) => void;
+}
+
+const SignUpFormCaregiver: React.FC<SignProps> = ({ setIsCaregiver }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const form = useForm<z.infer<typeof caregiverRegistrationSchema>>({
+  const form = useForm<z.infer<typeof caregiverSchema>>({
     mode: "onChange",
     shouldFocusError: false,
-    resolver: zodResolver(caregiverRegistrationSchema),
+    resolver: zodResolver(caregiverSchema),
+    defaultValues: {
+      step: 1,
+      photo: "base64EncodedImageString",
+    },
   });
-  const step = form.watch("step");
-  const maxSteps = 3;
-
-  const prevStep = () => {
-    if (step > 1) {
-      form.setValue("step", 1, { shouldValidate: true });
-    }
-  };
-  const nextStep = () => {
-    console.log(form.formState.errors);
-    form.trigger();
-    if (step < maxSteps && form.formState.isValid) {
-      form.setValue("step", 2, { shouldValidate: true });
-    }
-  };
-
+  const step = 1;
+  // console.log(form.getValues());
   const onSubmit = async () => {
-    await dispatch(register(form.getValues() as caregiverRegistartionForm))
+    await dispatch(
+      registerCaregiver(form.getValues() as caregiverRegistartionForm)
+    )
       .unwrap()
       .then(() => {
         toast({
-          title: "Регистрация прошла успешно",
+          title: "Registration was successfull",
         });
-        navigate("/registration");
+        navigate("/login");
       })
       .catch(() => {
         console.log("AAAA OSHIBKA");
@@ -75,25 +70,25 @@ const SignUpFormCaregiver: React.FC = () => {
             <FormStep step={1} currentStep={step}>
               <FirstStep />
             </FormStep>
-            <FormStep step={2} currentStep={step}>
-              <SecondStep />
-            </FormStep>
             <div className="w-full flex flex-row justify-between">
               <Button
-                type="button"
+                type={"button"}
                 variant="default"
-                disabled={!(step > 1)}
-                onClick={prevStep}
+                onClick={() => {
+                  setIsCaregiver(0);
+                }}
               >
-                Назад
+                {"Back"}
               </Button>
               <Button
-                key={step === maxSteps ? "submit-btn" : "next-step-btn"}
-                type={step === maxSteps ? "submit" : "button"}
+                key={"submit-btn"}
+                type={"submit"}
                 variant="default"
-                onClick={step === maxSteps ? undefined : nextStep}
+                onClick={() => {
+                  onSubmit();
+                }}
               >
-                {step === maxSteps ? "Отправить" : "Далее"}
+                {"Register"}
               </Button>
             </div>
           </form>

@@ -9,67 +9,40 @@ import {
 import { Form, FormStep } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { useAppDispatch } from "@/hooks/redux";
-import { register } from "@/store/reducers/authReducer";
-import { ecpData, registartionForm } from "@/ts/types";
-import { registrationSchema } from "@/zod/zod";
+import { registerMember } from "@/store/reducers/authReducer";
+import { memberRegistartionForm } from "@/ts/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
-import FirstStep from "./components/FirstStep/FirstStep";
-import SecondStep from "./components/SecondStep/SecondStep";
+import { memberSchema } from "@/zod/zod";
+import FirstStepMember from "./components/FirstStep/FirstStepMember";
 
-interface FormProps {
-  initialData: ecpData;
+interface SignProps {
+  setIsCaregiver: (value: number) => void;
 }
-
-const SignUpFormMember: React.FC<FormProps> = ({ initialData }) => {
+const SignUpFormMember: React.FC<SignProps> = ({ setIsCaregiver }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const form = useForm<z.infer<typeof registrationSchema>>({
+  const form = useForm<z.infer<typeof memberSchema>>({
     mode: "onChange",
     shouldFocusError: false,
-    resolver: zodResolver(registrationSchema),
+    resolver: zodResolver(memberSchema),
     defaultValues: {
       step: 1,
-      name: initialData.name,
-      surname: initialData.surname,
-      patronymic: initialData.patronymic,
-      organization: initialData.organization.length
-        ? initialData.organization
-        : "Нет организации",
-      IIN: initialData.IIN,
-      BIN: initialData.BIN.length ? initialData.BIN : "Нет БИН",
-      email: initialData.email,
-      legalAddress: "",
-      factAddress: "",
     },
   });
-  const step = form.watch("step");
-  const maxSteps = 2;
-
-  const prevStep = () => {
-    if (step > 1) {
-      form.setValue("step", 1, { shouldValidate: true });
-    }
-  };
-  const nextStep = () => {
-    console.log(form.formState.errors);
-    form.trigger();
-    if (step < maxSteps && form.formState.isValid) {
-      form.setValue("step", 2, { shouldValidate: true });
-    }
-  };
+  const step = 1;
 
   const onSubmit = async () => {
-    await dispatch(register(form.getValues() as registartionForm))
+    await dispatch(registerMember(form.getValues() as memberRegistartionForm))
       .unwrap()
       .then(() => {
         toast({
-          title: "Регистрация прошла успешно",
+          title: "Registration was successfull",
         });
-        navigate("/administration/organizations");
+        navigate("/login");
       })
       .catch(() => {
         console.log("AAAA OSHIBKA");
@@ -77,41 +50,42 @@ const SignUpFormMember: React.FC<FormProps> = ({ initialData }) => {
           variant: "destructive",
           title: "Ошибка при регистрация",
         });
-        navigate("/registration");
+        navigate("/registration/");
       });
   };
 
   return (
     <Card className="w-full lg:w-1/2 overflow-y-scroll absolute top-10">
       <CardHeader>
-        <CardTitle>Регистрация</CardTitle>
-        <CardDescription>Введите ваши данные</CardDescription>
+        <CardTitle>Registration</CardTitle>
+        <CardDescription>Enter your data</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormStep step={1} currentStep={step}>
-              <FirstStep />
-            </FormStep>
-            <FormStep step={2} currentStep={step}>
-              <SecondStep organization_types={initialData.organization_types} />
+              <FirstStepMember />
             </FormStep>
             <div className="w-full flex flex-row justify-between">
               <Button
-                type="button"
+                key={"submit-btn"}
+                type={"submit"}
                 variant="default"
-                disabled={!(step > 1)}
-                onClick={prevStep}
+                onClick={() => {
+                  setIsCaregiver(0);
+                }}
               >
-                Назад
+                {"Back"}
               </Button>
               <Button
-                key={step === maxSteps ? "submit-btn" : "next-step-btn"}
-                type={step === maxSteps ? "submit" : "button"}
+                key={"submit-btn"}
+                type={"submit"}
                 variant="default"
-                onClick={step === maxSteps ? undefined : nextStep}
+                onClick={() => {
+                  onSubmit();
+                }}
               >
-                {step === maxSteps ? "Отправить" : "Далее"}
+                {"Register"}
               </Button>
             </div>
           </form>

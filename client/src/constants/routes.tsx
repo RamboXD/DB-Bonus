@@ -1,26 +1,12 @@
-import {
-  ClientLogin,
-  Deals,
-  Employees,
-  Organization,
-  Organizations,
-  Registration,
-  WorkerLogin,
-} from "@/pages";
+import { Deals, Employees, Login, Organization, Registration } from "@/pages";
+import { Jobs } from "@/pages/Administration";
 import { IRoute, Role } from "@/ts/types";
 
 export const routes: IRoute[] = [
   {
-    name: "Client Login",
-    path: "/login/client",
-    component: <ClientLogin />,
-    roles: [Role.CLIENT, Role.ADMIN],
-    isPublic: true,
-  },
-  {
     name: "Worker Login",
-    path: "/login/worker",
-    component: <WorkerLogin />,
+    path: "/login",
+    component: <Login />,
     roles: [Role.CLIENT, Role.ADMIN],
     isPublic: true,
   },
@@ -33,8 +19,8 @@ export const routes: IRoute[] = [
   },
   {
     name: "Organizations",
-    path: "/administration/organizations",
-    component: <Organizations />,
+    path: "/member/jobs",
+    component: <Jobs />,
     roles: [Role.CLIENT, Role.ADMIN],
     isPublic: false,
   },
@@ -58,5 +44,5 @@ export const routes: IRoute[] = [
     component: <Registration />,
     roles: [Role.CLIENT, Role.ADMIN],
     isPublic: true,
-  },  
+  },
 ];
