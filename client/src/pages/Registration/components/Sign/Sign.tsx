@@ -1,5 +1,5 @@
 import logo from "@/assets/images/logo2.jpg";
-import { Button, LangSwitch } from "@/components";
+import { Button } from "@/components";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

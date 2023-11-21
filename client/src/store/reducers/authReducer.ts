@@ -1,4 +1,3 @@
-import { convertDateFormat } from "@/lib/utils";
 import AuthService from "@/services/Auth/AuthService";
 import {
   caregiverData,
@@ -72,7 +71,7 @@ export const registerMember = createAsyncThunk(
       },
     };
     console.log(memberData);
-    const response = await AuthService.registerMember(memberData);
+    await AuthService.registerMember(memberData);
     // return response;
   }
 );

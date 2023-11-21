@@ -1,5 +1,5 @@
 import $api from "@/http";
-import { AuthResponse, RegisterResponse } from "@/models/response/AuthResponse";
+import { AuthResponse } from "@/models/response/AuthResponse";
 import { caregiverData, memberData } from "@/ts/types";
 import { AxiosResponse } from "axios";
 
