@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -139,7 +140,8 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
         ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
         return
     }
-    
+    log.Printf(payload.Email)
+    log.Printf(payload.Password)
     var user models.User
     result := ac.DB.First(&user, "email = ?", strings.ToLower(payload.Email))
     if result.Error != nil {

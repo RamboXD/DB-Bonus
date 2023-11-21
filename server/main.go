@@ -51,7 +51,7 @@ func main() {
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:5173", config.ClientOrigin}
 	corsConfig.AllowCredentials = true
-
+	corsConfig.AddAllowHeaders("Authorization")
 	server.Use(cors.New(corsConfig))
 
 	router := server.Group("/api")
